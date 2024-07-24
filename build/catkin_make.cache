@@ -1,0 +1,2 @@
+my_first_pkg
+-DCATKIN_DEVEL_PREFIX=/home/murakami/catkin_ws/devel -DCMAKE_INSTALL_PREFIX=/home/murakami/catkin_ws/install -G Unix Makefiles
