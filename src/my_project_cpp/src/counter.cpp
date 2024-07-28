@@ -2,7 +2,7 @@
 
 //Mensagens
 #include "std_msgs/Float64.h"
-
+#include "std_srvs/Empty.h"
 
 class Counter {
 
@@ -14,6 +14,7 @@ class Counter {
             num_sub = nh->subscribe("/number", 10 , &Counter::numberCallback, this);
             count_pub = nh->advertise<std_msgs::Float64>("/current_count", 10);
             timer_pub = nh->createTimer(ros::Duration(publish_interval), &Counter::timerCallback, this);
+            reset_srv = nh->advertiseService("/reset_counter", &Counter::resetSrvCallback, this);
         }
 
         void numberCallback(const std_msgs::Float64 &msg){
@@ -27,7 +28,11 @@ class Counter {
             count_pub.publish(msg);
         }
 
-
+        bool resetSrvCallback(std_srvs::Empty::Request &req, std_srvs::Empty::Response &res){
+            count = 0;
+            ROS_INFO("Resentando a contagem.");    
+            return true;
+        }
 
     private:
         double count;
@@ -35,7 +40,7 @@ class Counter {
         ros::Subscriber num_sub;
         ros::Publisher count_pub;
         ros::Timer timer_pub;
-
+        ros::ServiceServer reset_srv;
 };
 
 int main(int argc, char **argv ) {
@@ -47,4 +52,4 @@ int main(int argc, char **argv ) {
     ros::spin();
 
     return 0;
-}
+};
